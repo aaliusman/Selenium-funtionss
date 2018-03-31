@@ -1,0 +1,212 @@
+
+*****************How to create test class*************************
+
+public class Test {
+	
+	static WebDriver driver;
+	@Before
+	public void before() throws InterruptedException {
+		System.out.println("this is before class");
+
+		System.setProperty("webdriver.chrome.driver",
+				"C:\\Users\\Usman\\eclipse-workspace\\Ebay\\chromedriver.exe");
+
+		// Webdriver is interface
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+
+		driver.get("https://www.ebay.com/");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		Thread.sleep(2000);
+		
+	}
+
+	@After
+	public void after() throws InterruptedException {
+		driver.manage().deleteAllCookies();
+		Thread.sleep(8000);
+	driver.close();
+
+}	@org.junit.Test
+	public void test() throws InterruptedException {
+		Home hp=new Home();
+		hp.hmpage(driver);
+
+
+
+***********How to create Page classs************
+
+public static void hmpage(WebDriver driver) {
+		
+		entertxt(driver,".//*[@id='gh-ac']").sendKeys("apple watch series");
+		//clickele(driver, "//div[@id='gAC']/ul/li[6]/a").click();
+		clickele(driver,".//*[@id='gh-btn']").click();
+		
+	}
+
+
+************HOw to create Util/Lib class*********
+
+	public static WebElement clickele(WebDriver driver, String xpath) {
+		WebElement a=driver.findElement(By.xpath(xpath));
+		return a;
+		
+	}
+	
+	public static WebElement entertxt(WebDriver driver, String xpath) {
+		WebElement b=driver.findElement(By.xpath(xpath));
+		return b;
+	}
+
+*************Alert Handling**********
+
+		driver.switchTo().alert().accept();
+		 driver.switchTo().alert().dismiss();
+		 driver.switchTo().alert().sendKeys("lkajdl");
+		 driver.switchTo().alert().getText();
+
+**********Actions*************
+
+	Actions ac = new Actions(driver);
+		// mouse over
+		 ac.moveToElement(driver.findElement(By.id("nav-link-prime"))).build().perform();
+		 driver.findElement(By.xpath(".//*[@id='nav-flyout-prime']/div[2]/div[1]/div[3]/a")).click();
+		
+		//Right Click
+		// ac.contextClick(driver.findElement(By.xpath(".//*[@id='nav-your-amazon']"))).build().perform();
+
+		
+		// ac.sendKeys(Keys.BACK_SPACE).build().perform();
+		
+		// ac.keyDown(Keys.CONTROL).sendKeys(Keys.BACK_SPACE).keyUp(Keys.CONTROL).build().perform();
+		
+		// ac.keyDown(Keys.CONTROL).sendKeys(Keys.TAB).keyUp(Keys.CONTROL).build().perform();
+		
+		// ac.sendKeys(Keys.TAB).build().perform();
+
+		
+		// ac.keyDown(Keys.CONTROL).sendKeys(Keys.ENTER).keyUp(Keys.CONTROL).build().perform();
+		
+
+******************Select*************
+					
+		Select m= new Select (driver.findElement(By.id("month")));
+		m.selectByVisibleText("Mar");
+		
+		Select d= new Select (driver.findElement(By.id("day")));
+		d.selectByIndex(8);
+		
+		Select y=new Select (driver.findElement(By.id("year")));
+		y.selectByValue("1994");
+
+******************Iframe***********
+
+		driver.switchTo().frame("IF1");
+		
+		driver.findElement(By.xpath(".//*[@id='content']/div[1]/div/div/div/div[2]/div/form/fieldset/div[8]/input"))
+				.sendKeys("Usman");
+		driver.findElement(By.xpath(".//*[@id='sex-0']")).click();
+		Thread.sleep(3000);
+		System.out.println(driver.findElements(By.tagName("iframe")).size());
+		
+		driver.switchTo().defaultContent();
+
+
+****************Navigate to****************
+
+	driver.navigate().to("https://www.united.com/ual/en/us/");
+		driver.navigate().back();
+	Thread.sleep(3000);
+		driver.navigate().forward();
+		Thread.sleep(3000);
+		driver.navigate().back();
+		Thread.sleep(3000);
+		driver.navigate().refresh();
+		Thread.sleep(8000);
+		driver.close();
+
+
+******************swtich to new windows*************
+
+	
+		String mainwin=driver.getWindowHandle();
+		
+		driver.findElement(By.id("button1")).click();
+		
+		 Thread.sleep(2459);
+		 
+		 Set <String> wins = driver.getWindowHandles();
+		 for(String a : wins) {
+			 if(!a.equalsIgnoreCase(mainwin)){
+			 driver.switchTo().window(a);
+			 System.out.println(driver.getTitle());
+			
+		 driver.switchTo().window(mainwin);
+		 driver.quit();
+
+
+*******************ReadProperties***************
+
+public static String readprop(WebDriver driver, String key) throws IOException {
+		
+		InputStream fs= new FileInputStream("src\\test\\java\\Util\\locator.properties");
+		Properties pro=new Properties();
+		pro.load(fs);
+		
+		String value= pro.getProperty(key);
+		return value;
+		
+	}
+	
+
+	****************Take Screen Shot***********
+
+	public static void screenshot(WebDriver driver) throws IOException {
+		
+		File src=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(src, new File("C:/Java/error.png"));
+	}
+
+}
+
+	******** Read from Excel ***********
+
+	public static String readexcel(WebDriver driver, int row, int col) throws IOException {
+		
+		FileInputStream fs=new FileInputStream("C:\\Users\\Usman\\eclipse-workspace\\Maven2\\exdata.xlsx");
+		Workbook wb=new XSSFWorkbook(fs);
+		Sheet sh= wb.getSheetAt(0);
+		Row rw=sh.getRow(row);
+		Cell ce=rw.getCell(col);
+		String a=ce.getStringCellValue();
+		
+		return a;
+
+
+	*****************Read DAta base***********
+
+how to read database:::
+1. you need to find out which DB server your company using, it can be DB2, sql server, mysql, mangoDB
+
+2. based on db server name download dbserver--connector-java jar file, and put this jar file into project using add external jar file.
+
+3. establish connection::: we need to have Connection conn=driverManager.getconnect(ìjdbc:mysql://<Host>:3306/<Database>î, ì<userId>î, ì<Password>î)
+
+4. create statement::; Statement st=conn.creatstatement();
+
+5. Resultset rst=st.excuteQuery("Select * from tablea")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
